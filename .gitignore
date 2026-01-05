@@ -1,0 +1,32 @@
+# Ignore Python cache files
+__pycache__/
+
+# Ignore virtual environment
+venv/
+__pycache__/
+
+# Ignore build artifacts
+build/
+dist/
+*.egg-info
+
+# Ignore IDE and editor files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+
+# Ignore logs and temporary files
+*.log
+*.tmp
+*.pyc
+*.pyo
+
+# Ignore configuration files
+config/*.ini
+
+
+#Ignore custom
+temp*.txt
