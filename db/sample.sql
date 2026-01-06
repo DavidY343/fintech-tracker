@@ -17,7 +17,7 @@ VALUES
 (3, 'Criptomonedas', NOW() - INTERVAL '1 day', 500.00, 'income', 'Venta de Ethereum');
 
 
-INSERT INTO assets (ticker, name, currency, themes, type)
+INSERT INTO assets (ticker, name, currency, theme, type)
 VALUES
 ('AAPL', 'Apple Inc.','EUR', 'Global Equity', 'stock'),
 ('VWCE', 'Vanguard FTSE All-World ETF', 'EUR', 'Global Equity', 'etf'),

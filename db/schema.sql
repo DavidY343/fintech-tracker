@@ -50,7 +50,7 @@ CREATE TABLE assets (
     isin VARCHAR(12),
     name VARCHAR(255) NOT NULL,
     currency CHAR(3) NOT NULL,
-    themes VARCHAR(255),
+    theme VARCHAR(255),
     type VARCHAR(30) NOT NULL,
     is_active BOOLEAN DEFAULT TRUE
 );
