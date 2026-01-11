@@ -1,5 +1,5 @@
-INSERT INTO users (email, password_hash)
-VALUES ('demo@user.com', 'hashed_password');
+INSERT INTO users (email, password_hash) -- hashed_password
+VALUES ('demo@user.com', '$2b$12$1fcoQ5bToypnjRbAYlMNBOfxAd.uwdvZLyQF9yMvZI1Cyj6KfRFqS');
 
 INSERT INTO accounts (user_id, name, type, currency)
 VALUES
