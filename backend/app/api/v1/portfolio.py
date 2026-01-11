@@ -8,9 +8,6 @@ from app.services.account_service import get_accounts_with_balance, get_selected
 from app.services.assets_service import get_asset_allocation, get_global_asset_allocation
 from app.schemas.allocation import AssetAllocation, AccountWithBalance
 
-from datetime import date
-from fastapi import Query
-
 router = APIRouter()
 
 # 1 Saca una lista de mis cuentas y su balance (total, invertido, cash)

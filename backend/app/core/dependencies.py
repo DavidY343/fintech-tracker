@@ -1,4 +1,3 @@
-# app/core/dependencies.py - Ampliar
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
