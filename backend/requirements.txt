@@ -1,6 +1,11 @@
-fastapi
+fastapi[all]
 uvicorn[standard]
+
 sqlalchemy>=2.0
 asyncpg
-pydantic
+
+python-jose[cryptography]
+passlib[bcrypt]
+bcrypt==4.0.1
+
 python-dotenv
