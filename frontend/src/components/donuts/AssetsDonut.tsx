@@ -7,13 +7,11 @@ import DonutTooltip from './DonutToolTip'
 const COLORS = ['#8b5cf6', '#22c55e', '#f97316', '#06b6d4', '#ef4444', '#eab308']
 
 interface Props {
-  userId: number
   selectedAccountId: number | 'all'
   groupBy: 'type' | 'theme' | 'asset'
 }
 
 export default function AssetsDonut({
-  userId,
   selectedAccountId,
   groupBy
 }: Props) {
@@ -27,9 +25,9 @@ export default function AssetsDonut({
         let response: AssetAllocation[]
         
         if (selectedAccountId === 'all') {
-          response = await getGlobalAssetAllocation(userId, groupBy)
+          response = await getGlobalAssetAllocation(groupBy)
         } else {
-          response = await getAccountAssetAllocation(userId, selectedAccountId, groupBy)
+          response = await getAccountAssetAllocation(selectedAccountId, groupBy)
         }
         
         setData(response || [])
@@ -42,7 +40,7 @@ export default function AssetsDonut({
     }
 
     fetchData()
-  }, [selectedAccountId, groupBy, userId])
+  }, [selectedAccountId, groupBy])
 
   if (loading) {
     return (

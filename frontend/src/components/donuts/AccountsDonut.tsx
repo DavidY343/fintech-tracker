@@ -8,13 +8,11 @@ const COLORS = ['#8b5cf6', '#22c55e', '#f97316', '#06b6d4', '#ef4444', '#eab308'
 
 interface Props {
   accounts: AccountWithBalance[]
-  userId: number
   selectedAccountId: number | 'all'
 }
 
 export default function AccountsDonut({
   accounts,
-  userId,
   selectedAccountId
 }: Props) {
   const [data, setData] = useState<any[]>([])
@@ -31,7 +29,7 @@ export default function AccountsDonut({
           }))
           setData(formattedData)
         } else {
-          const acc = await getAccountWithBalance(userId, selectedAccountId)
+          const acc = await getAccountWithBalance(selectedAccountId)
           setData([
             { name: 'Efectivo', value: acc.cash_balance || 0 },
             { name: 'Invertido', value: acc.invested_value || 0 }
@@ -46,7 +44,7 @@ export default function AccountsDonut({
     }
 
     fetchData()
-  }, [selectedAccountId, accounts, userId])
+  }, [selectedAccountId, accounts])
 
   if (loading) {
     return (
