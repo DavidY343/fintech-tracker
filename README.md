@@ -98,7 +98,6 @@ frontend/
 
 ### Funcionalidades implementadas
 
-- [x] Tema oscuro/claro
 - [x] Layout base tipo dashboard
 
 ### Funcionalidades pendientes
@@ -141,3 +140,12 @@ priorizando:
 - claridad arquitectónica
 - decisiones justificables
 
+
+
+---
+
+## Ideas de mejoras a largo plazo
+
+- Ahora mismo se usa JWT simple para la autenticacion y se guarda el token en localSotarage. Se deberia mejorar la seguridad usando HttpOnly cookies. Es decir, evitar los ataques XSS y posteriormente CSRF.
+
+- Posteriormente, en la Login page, se deberia implementar un sistema de envío de emails para verificación de cuenta y recuperación de contraseña y el recordatorio de sesión.
