@@ -3,11 +3,10 @@ import { apiGet } from './api'
 
 
 
-export async function getGlobalAssetAllocation(userId: number, groupBy: 'type' | 'theme' | 'asset'): Promise<AssetAllocation[]> {
+export async function getGlobalAssetAllocation(groupBy: 'type' | 'theme' | 'asset'): Promise<AssetAllocation[]> {
 
     try {
-        const data = await apiGet<AssetAllocation[]>(`/portfolio/assets/${groupBy}/${userId}`)
-        console.log(data)
+        const data = await apiGet<AssetAllocation[]>(`/portfolio/assets/${groupBy}`, true)
         return data
     } catch (error) {
         console.error('Error fetching global asset allocation:', error)
@@ -15,11 +14,10 @@ export async function getGlobalAssetAllocation(userId: number, groupBy: 'type' |
     }
 }
 
-export async function getAccountAssetAllocation(userId: number, accountId: number, groupBy: 'type' | 'theme' | 'asset' ): Promise<AssetAllocation[]> {
+export async function getAccountAssetAllocation(accountId: number, groupBy: 'type' | 'theme' | 'asset' ): Promise<AssetAllocation[]> {
 
     try {
-        const data = await apiGet<AssetAllocation[]>(`/portfolio/assets/${groupBy}/${accountId}/${userId}`)
-        console.log(data)
+        const data = await apiGet<AssetAllocation[]>(`/portfolio/assets/${groupBy}/${accountId}`, true)
         return data
     } catch (error) {
         console.error('Error fetching account asset allocation:', error)
