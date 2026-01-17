@@ -147,3 +147,100 @@ async def get_global_asset_allocation(db, user_id: int, group_by: str):
         {"user_id": user_id, "group_by": group_by}
     )
     return result.mappings().all()
+
+async def get_all_assets(db, user_id: int):
+    """
+    Devuelve todos los activos del usuario con detalles completos
+    """
+    query = text("""
+        WITH positions AS (
+            SELECT
+                o.account_id,
+                o.asset_id,
+                SUM(
+                    CASE
+                        WHEN o.operation_type = 'buy' THEN o.quantity
+                        ELSE -o.quantity
+                    END
+                ) AS net_quantity
+            FROM operations o
+            JOIN accounts ac ON ac.account_id = o.account_id
+            WHERE ac.user_id = :user_id
+            GROUP BY o.account_id, o.asset_id
+            HAVING SUM(
+                CASE
+                    WHEN o.operation_type = 'buy' THEN o.quantity
+                    ELSE -o.quantity
+                END
+            ) > 0
+        ),
+        latest_prices AS (
+            SELECT DISTINCT ON (asset_id)
+                asset_id,
+                price
+            FROM price_history
+            ORDER BY asset_id, date DESC
+        ),
+        asset_performance AS (
+            SELECT
+                o.account_id,
+                o.asset_id,
+                SUM(
+                    CASE
+                        WHEN o.operation_type = 'buy' THEN o.quantity * o.price
+                        ELSE -o.quantity * o.price
+                    END
+                ) AS invested_value
+            FROM operations o
+            JOIN accounts ac ON ac.account_id = o.account_id
+            WHERE ac.user_id = :user_id
+            GROUP BY o.account_id, o.asset_id  -- ¡Importante: agrupa por account y asset!
+        ),
+        valued_positions AS (
+            SELECT
+                p.account_id,
+                ac.name AS account_name,
+                a.asset_id,
+                a.name AS asset_name,
+                a.ticker,
+                a.isin,
+                a.type,
+                COALESCE(a.theme, 'Unclassified') AS theme,
+                p.net_quantity,
+                lp.price AS current_price,
+                p.net_quantity * lp.price AS total_value,
+                COALESCE(ap.invested_value, 0) AS invested_value,  -- Usa COALESCE para evitar NULL
+                CASE 
+                    WHEN COALESCE(ap.invested_value, 0) > 0 
+                    THEN ((p.net_quantity * lp.price - ap.invested_value) / ap.invested_value * 100)
+                    ELSE 0 
+                END AS performance_pct
+            FROM positions p
+            JOIN accounts ac ON ac.account_id = p.account_id
+            JOIN assets a ON a.asset_id = p.asset_id
+            JOIN latest_prices lp ON lp.asset_id = p.asset_id
+            LEFT JOIN asset_performance ap ON ap.account_id = p.account_id AND ap.asset_id = p.asset_id
+            WHERE ac.user_id = :user_id
+        )
+        SELECT
+            account_id,
+            account_name,
+            asset_id,
+            asset_name AS name,
+            ticker,
+            isin,
+            type,
+            theme,
+            net_quantity AS quantity,
+            current_price,
+            total_value,
+            invested_value,
+            ROUND(performance_pct, 2) AS performance
+        FROM valued_positions
+        ORDER BY account_name, total_value DESC;
+    """)
+    
+    result = await db.execute(query, {"user_id": user_id})
+    data = result.mappings().all()
+    
+    return data
