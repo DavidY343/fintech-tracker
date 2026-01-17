@@ -1,4 +1,4 @@
-import { AssetAllocation } from '../types/allocation'
+import { AssetAllocation, AssetTableRow } from '../types/asset'
 import { apiGet } from './api'
 
 
@@ -21,6 +21,16 @@ export async function getAccountAssetAllocation(accountId: number, groupBy: 'typ
         return data
     } catch (error) {
         console.error('Error fetching account asset allocation:', error)
+        throw error
+    }
+}
+
+export async function getAllAssets(): Promise<AssetTableRow[]> {
+    try {
+        const data = await apiGet<AssetTableRow[]>('/portfolio/assets/all', true)
+        return data
+    } catch (error) {
+        console.error('Error fetching all assets:', error)
         throw error
     }
 }
