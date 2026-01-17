@@ -7,6 +7,8 @@ import AccountsDonut from '../components/donuts/AccountsDonut'
 import AccountSelector from '../components/selectors/AccountSelector'
 import AssetsDonut from '../components/donuts/AssetsDonut'
 import GroupBySelector from '../components/selectors/GroupSelector'
+import AssetsTable from '../components/tables/AssetsTable'
+
 
 export default function PortfolioPage() {
 
@@ -171,14 +173,13 @@ export default function PortfolioPage() {
 
 
       {/* Line chart */}
-      <div className="h-80 rounded-xl bg-[#18181a] border border-white/10 flex items-center justify-center">
+      <div className="h-80 rounded-xl bg-[#11162A] border border-white/10 flex items-center justify-center">
         Gráfico de rentabilidad temporal
       </div>
 
       {/* Tabla */}
       <div className="rounded-xl bg-[#11162A] border border-white/10 p-6">
-        <p className="font-bold mb-4 text-white">Detalle por activo</p>
-        <p className="text-sm text-gray-400">Tabla en construcción</p>
+        <AssetsTable />
       </div>
 
     </div>
