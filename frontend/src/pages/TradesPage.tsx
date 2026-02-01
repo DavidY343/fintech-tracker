@@ -4,6 +4,7 @@ import { getTradeHistory } from '../services/tradeService'
 import { Filter, Search, Download } from 'lucide-react'
 import { Wallet, TrendingUp, PieChart } from 'lucide-react'
 import KPICard from '../components/KPICard'
+import AddTradeForm from '../components/form/AddTradeForm';
 
 export default function TradesPage() {
   const [trades, setTrades] = useState<TradeHistory[]>([])
@@ -130,7 +131,7 @@ export default function TradesPage() {
           <button
             onClick={handleExport}
             className="flex items-center gap-2 px-4 py-2 bg-purple-600/20 hover:bg-purple-600/30 
-              border border-purple-500/30 rounded-lg transition-all hover:border-purple-400/50"
+              border border-purple-500/30 rounded-lg transition-all hover:border-purple-400/50 cursor-pointer"
           >
             <Download className="w-4 h-4" />
             Exportar CSV
@@ -162,7 +163,11 @@ export default function TradesPage() {
           />
         </div>
       </div>
-
+      <AddTradeForm 
+        onSuccess={() => {
+          fetchTradeHistory();
+        }}
+      />
       {/* Filtros */}
       <div className="rounded-xl bg-[#11162A] border border-white/10 p-6">
         <div className="flex items-center gap-3 mb-6">
@@ -174,11 +179,11 @@ export default function TradesPage() {
           <div>
             <label className="block text-base text-gray-400 mb-3 flex items-center gap-2">
               <Search className="w-4 h-4" />
-              Ticker / Activo
+              Activo
             </label>
             <input
               type="text"
-              placeholder="AAPL, BTC, VWCE.DE..."
+              placeholder="Apple Inc., Bitcoin..."
               className="w-full px-4 py-3 bg-[#0B0F1A] border border-white/10 
                 rounded-lg focus:outline-none focus:border-purple-500 
                 focus:ring-1 focus:ring-purple-500/30 transition-colors"
