@@ -148,10 +148,10 @@ function AssetCard({
       `}
     >
     
-      {/* Contenido Principal (Siempre visible o en hover) */}
+      {/* Contenido Principal (Siempre visible) */}
       <div className="absolute inset-0 flex flex-col items-center justify-center p-2">
         
-        {/* Ticker / Nombre - Sube un poco en hover */}
+        {/* Nombre */}
        <span className={`
           text-white font-bold leading-tight tracking-wide transition-all duration-500 px-1
           ${isLarge ? 'text-2xl' : isMedium ? 'text-base' : 'text-[10px]'}
@@ -160,7 +160,7 @@ function AssetCard({
           {asset.name}
         </span>
 
-        {/* RENDIMIENTO - Baja en hover */}
+        {/* RENDIMIENTO */}
         <div className={`
           flex items-center gap-1 font-bold transition-all duration-500
           ${isLarge ? 'text-sm' : 'text-[9px]'}
@@ -172,13 +172,16 @@ function AssetCard({
         </div>
 
         {/* --- DATOS EXTRA (Solo visibles en Hover) --- */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/20 backdrop-blur-[2px]">
+        <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/20 backdrop-blur-[2px] gap-1">
           {/* Valor Actual */}
-          <span className={`text-white font-bold leading-none ${isLarge ? 'text-2xl' : 'text-sm'}`}>
-            €{asset.total_value.toLocaleString()}
+          <span className={`text-white/70 font-bold leading-none ${isLarge ? 'text-xl' : 'text-sm'}`}>
+            {asset.ticker || asset.isin}
+          </span>
+          <span className={`text-white/70 font-bold leading-none ${isLarge ? 'text-xl' : 'text-sm'}`}>
+            Valor: {asset.total_value.toLocaleString()}€
           </span>
           {/* Peso en Cartera */}
-          <span className="text-white/60 text-sm uppercase tracking-tighter">
+          <span className="text-white/60 text-sm tracking-tighter">
             Peso: {weight.toFixed(1)}%
           </span>
         </div>
