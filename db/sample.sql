@@ -21,7 +21,6 @@ INSERT INTO assets (ticker, name, currency, theme, type)
 VALUES
 ('AAPL', 'Apple Inc.','EUR', 'Global Equity', 'stock'),
 ('VWCE.DE', 'Vanguard FTSE All-World ETF', 'EUR', 'Global Equity', 'etf'),
-(NULL, 'Fondo Indexado Global', 'EUR', 'Global Equity', 'fund'),
 ('BTC-EUR', 'Bitcoin', 'EUR', 'Tech', 'crypto'),
 ('ETH-EUR', 'Ethereum', 'EUR', 'Tech', 'crypto');
 
@@ -32,17 +31,3 @@ VALUES
 ('IE000ZYRH0Q7', 'iShares Developed World Index (IE) Acc EUR clase S', 'EUR', 'Global Equity', 'fund'),
 ('IE000QAZP7L2', 'iShares Emerging Markets Index Fund (IE) Acc EUR clase S', 'EUR', 'Emerging Markets', 'fund');
 
-
-INSERT INTO operations (asset_id, account_id, date, quantity, price, operation_type)
-VALUES
-(1, 2, NOW() - INTERVAL '30 days', 10, 150, 'buy'),
-(2, 2, NOW() - INTERVAL '20 days', 5, 100, 'buy'),
-(3, 2, NOW() - INTERVAL '15 days', 20, 50, 'buy'),
-(4, 3, NOW() - INTERVAL '7 days', 0.05, 45000, 'buy'),
-(5, 3, NOW() - INTERVAL '5 days', 0.5, 3000, 'buy'),
-(5, 3, NOW() - INTERVAL '1 day', 0.1, 3200, 'sell'),
-(6, 3, NOW() - INTERVAL '1 day', 0.1, 180, 'buy');
-
-INSERT INTO price_history (asset_id, date, price)
-VALUES
-(3, CURRENT_DATE, 52);
