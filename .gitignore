@@ -56,3 +56,8 @@ scripts/
 temp*.txt
 .env
 worker/check.py
+/backups/
+/backup-logs/
+*.sql
+*.sql.gz
+*.dump
