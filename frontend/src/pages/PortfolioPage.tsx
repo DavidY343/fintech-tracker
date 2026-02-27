@@ -10,6 +10,16 @@ import GroupBySelector from '../components/selectors/GroupSelector'
 import AssetsTable from '../components/tables/AssetsTable'
 import AssetsTreemap from '../components/AssetTreemap'
 import PortfolioHistoryChart from '../components/PortfolioHistoryChart'
+import { getPerformanceMetrics } from '../services/performanceService'
+import { PerformanceResponse } from '../types/performance'
+
+
+const formatCurrency = (value: number) => {
+  return new Intl.NumberFormat('es-ES', {
+    style: 'currency',
+    currency: 'EUR',
+  }).format(value)
+}
 
 export default function PortfolioPage() {
 
@@ -17,9 +27,9 @@ export default function PortfolioPage() {
   const [selectedAccountId, setSelectedAccountId] = useState<number | 'all'>('all')
   const [selectedAssetAccountId, setSelectedAssetAccountId] = useState<number | 'all'>('all')
   const [groupBy, setGroupBy] = useState<'type' | 'theme' | 'asset'>('type')
-
+  const [historyAccountId, setHistoryAccountId] = useState<number | 'all'>('all');
+  const [metrics, setMetrics] = useState<PerformanceResponse | null>(null)
   const [loading, setLoading] = useState(true)
-
   useEffect(() => {
       loadAccounts()
   }, []);
@@ -29,6 +39,8 @@ export default function PortfolioPage() {
       setLoading(true)
       const data = await getAccountsWithBalance()
       setAccounts(data)
+      const metricsData = await getPerformanceMetrics()
+      setMetrics(metricsData)
     } catch (error) {
       console.error('Error al obtener cuentas:', error)
       setAccounts([])
@@ -51,10 +63,11 @@ export default function PortfolioPage() {
     0
   )
 
-  // Calcular rendimiento (ejemplo)
-  const monthlyPerformance = 3.34
-  const ytdPerformance = 0.69
-  const totalPerformance = 7.63
+  // Calcular rendimiento
+  const monthlyPerformance = metrics?.month?.pct || 0
+  const ytdPerformance = metrics?.ytd?.pct || 0
+  const totalPerformance = metrics?.total?.pct || 0
+  const threeMonthsPerformance = metrics?.three_months?.pct || 0
 
   return (
     <div className="space-y-8">
@@ -104,7 +117,12 @@ export default function PortfolioPage() {
             subtitle={`€ ${(monthlyPerformance * totalInvested / 100).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
             positive={monthlyPerformance > 0}
           />
-          <KPICard title="3 Meses" value="-" />
+          <KPICard 
+          title="3 Meses" 
+          value={`${threeMonthsPerformance > 0 ? '+' : ''}${threeMonthsPerformance.toFixed(2)}%`}
+          subtitle={`€ ${(threeMonthsPerformance * totalInvested / 100).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+          positive={threeMonthsPerformance > 0}
+           />
           <KPICard 
             title="YTD" 
             value={`${ytdPerformance > 0 ? '+' : ''}${ytdPerformance.toFixed(2)}%`}
@@ -184,18 +202,45 @@ export default function PortfolioPage() {
       </div>
 
       {/* Line chart */}
-    <div className="rounded-xl bg-[#11162A] border border-white/10 p-6">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h2 className="text-xl font-semibold text-white">Evolución del Patrimonio</h2>
-          <p className="text-sm text-gray-400">Valor total de la cartera en el tiempo</p>
+      <div className="rounded-xl bg-[#11162A] border border-white/10 p-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div>
+            <h2 className="text-xl font-semibold text-white">Evolución del Patrimonio</h2>
+            <p className="text-sm text-gray-400">Valor total de la cartera en el tiempo</p>
+          </div>
+
+          {/* Selector de cuenta tipo botones */}
+          <div className="flex p-1 bg-black/20 rounded-lg border border-white/5 self-start">
+            <button
+              onClick={() => setHistoryAccountId('all')}
+              className={`px-4 py-1.5 text-xs font-medium rounded-md transition-all ${
+                historyAccountId === 'all' 
+                ? 'bg-purple-600 text-white shadow-lg' 
+                : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              General
+            </button>
+            {accounts.map((acc) => (
+              <button
+                key={acc.account_id}
+                onClick={() => setHistoryAccountId(acc.account_id)}
+                className={`px-4 py-1.5 text-xs font-medium rounded-md transition-all ${
+                  historyAccountId === acc.account_id 
+                  ? 'bg-purple-600 text-white shadow-lg' 
+                  : 'text-gray-400 hover:text-white'
+                }`}
+              >
+                {acc.name}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="h-80 w-full">
+          <PortfolioHistoryChart accountId={historyAccountId} />
         </div>
       </div>
-      <div className="h-80 w-full">
-        <PortfolioHistoryChart />
-      </div>
-    </div>
-
       {/* Tabla */}
       <div className="rounded-xl bg-[#11162A] border border-white/10 p-6">
         <div className="flex items-center justify-between mb-6">
